@@ -1,0 +1,785 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Expedition Spitzkörper</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
+<style>
+/* Layout: ein Feldtagebuch auf Kästchenpapier – Kopf mit Expeditionskarte, darunter eine grün gerahmte Aufgabenkarte wie auf den Arbeitsblättern */
+:root {
+  --paper: #ffffff;
+  --page: #f6f8f4;
+  --grid: #e3e9e1;
+  --fg: #1d2620;
+  --muted: #5c6b60;
+  --frame: #33cc33;
+  --frame-soft: #e7f8e3;
+  --ink: #144fcf;
+  --ink-tint: rgba(20, 79, 207, 0.07);
+  --ink-soft: #e8eefb;
+  --gold: #b07a00;
+  --gold-soft: #fff4d6;
+  --bad: #c0392b;
+  --bad-soft: #fdecea;
+  --good: #1e8a2e;
+  --font-display: "Kalam", "Segoe Print", "Comic Sans MS", cursive;
+  --font-body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --radius: 10px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #18211c; --page: #0f1612; --grid: #1c2721; --fg: #e4eee6; --muted: #9aaea0;
+    --frame: #3fd84f; --frame-soft: #1d3322; --ink: #7ea6ff; --ink-tint: rgba(126, 166, 255, 0.09);
+    --ink-soft: #1d2840; --gold: #f2b630; --gold-soft: #3a2f12; --bad: #ff7a6b; --bad-soft: #3a1d1a;
+    --good: #5fe07a; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #18211c; --page: #0f1612; --grid: #1c2721; --fg: #e4eee6; --muted: #9aaea0;
+  --frame: #3fd84f; --frame-soft: #1d3322; --ink: #7ea6ff; --ink-tint: rgba(126, 166, 255, 0.09);
+  --ink-soft: #1d2840; --gold: #f2b630; --gold-soft: #3a2f12; --bad: #ff7a6b; --bad-soft: #3a1d1a;
+  --good: #5fe07a; color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background-color: var(--page);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 26px 26px;
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.5;
+}
+.stack { display: grid; gap: 18px; min-width: 0; width: 100%; }
+.wrap { max-width: 820px; margin: 0 auto; padding-inline: 16px; padding-block: 20px 48px; display: grid; gap: 18px; }
+
+h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.15; text-wrap: balance; margin: 0; }
+p { margin: 0; }
+button { font: inherit; cursor: pointer; }
+:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+
+/* Kopf */
+.head { display: flex; gap: 16px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+.brand { display: flex; gap: 14px; align-items: center; min-width: 0; }
+.brand svg { flex: none; }
+.brand h1 { font-size: clamp(30px, 6vw, 44px); color: var(--ink); }
+.brand p { color: var(--muted); font-size: 15px; }
+.purse { display: flex; align-items: center; gap: 8px; background: var(--gold-soft); color: var(--fg); border: 2px solid var(--gold); border-radius: 999px; padding: 4px 14px 4px 6px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.purse small { font-weight: 400; color: var(--muted); }
+
+/* Karten wie auf dem Arbeitsblatt */
+.card { background: var(--paper); border: 3px solid var(--frame); padding: 16px 18px 20px; display: grid; gap: 14px; min-width: 0; }
+.card-top { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: start; }
+.letter { font-family: var(--font-display); font-weight: 700; font-style: italic; font-size: 30px; line-height: 1; color: var(--fg); min-width: 28px; }
+.card-title { font-family: var(--font-display); font-weight: 700; font-size: 20px; text-align: center; padding-top: 4px; }
+.stars { font-family: var(--font-display); font-weight: 700; font-size: 24px; line-height: .8; text-align: center; letter-spacing: 1px; min-width: 34px; white-space: pre; }
+
+.btn { border: 2px solid var(--ink); background: var(--ink); color: var(--paper); border-radius: 8px; padding: 9px 18px; font-weight: 700; }
+.btn:hover { filter: brightness(1.08); }
+.btn.ghost { background: transparent; color: var(--ink); }
+.btn.gold { background: var(--gold); border-color: var(--gold); color: #1d1400; }
+.btn:disabled { opacity: .45; cursor: default; }
+
+/* Start */
+.intro { display: grid; grid-template-columns: 1fr; gap: 12px; }
+.letterbox { font-family: var(--font-display); font-size: 19px; line-height: 1.45; }
+.sig { font-family: var(--font-display); color: var(--ink); text-align: right; }
+.grades { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+.grade { text-align: left; background: var(--paper); color: var(--fg); border: 3px solid var(--frame); padding: 14px 16px 16px; display: grid; gap: 8px; align-content: start; transition: transform .15s ease, box-shadow .15s ease; }
+.grade:hover { transform: translateY(-2px); box-shadow: 0 6px 0 var(--frame-soft); }
+.grade .g-top { display: flex; justify-content: space-between; align-items: start; gap: 8px; }
+.grade h3 { font-size: 23px; color: var(--ink); }
+.grade .g-sub { font-size: 14px; color: var(--muted); }
+.grade ul { margin: 0; padding-left: 18px; font-size: 15px; display: grid; gap: 2px; }
+.grade .best { font-size: 14px; color: var(--gold); font-weight: 700; }
+.grade .go { margin-top: 4px; font-family: var(--font-display); font-weight: 700; color: var(--ink); font-size: 18px; }
+
+details.pack { background: var(--paper); border: 2px dashed var(--frame); padding: 10px 16px; }
+details.pack summary { font-family: var(--font-display); font-weight: 700; font-size: 19px; cursor: pointer; color: var(--fg); }
+.pack-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 10px 22px; margin-top: 10px; font-size: 15px; }
+.pack-grid h4 { margin: 0 0 2px; font-size: 15px; color: var(--ink); }
+.f { font-family: "Cambria Math", "STIX Two Math", Georgia, serif; font-size: 17px; white-space: nowrap; }
+
+/* Karte der Expedition */
+.trail { display: flex; align-items: center; gap: 0; overflow-x: auto; padding: 4px 2px 8px; }
+.stop { flex: none; width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--muted); background: var(--paper); color: var(--muted); display: grid; place-items: center; font-weight: 700; font-size: 14px; font-variant-numeric: tabular-nums; }
+.stop.done { border-color: var(--frame); background: var(--frame-soft); color: var(--good); }
+.stop.now { border-color: var(--ink); background: var(--ink); color: var(--paper); transform: scale(1.15); }
+.path { flex: 1 1 10px; min-width: 8px; border-top: 3px dotted var(--muted); }
+.path.done { border-top-color: var(--frame); }
+.goal { flex: none; color: var(--gold); }
+.trail-meta { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 14px; color: var(--muted); }
+.linkish { background: none; border: none; color: var(--ink); text-decoration: underline; padding: 0; font-size: 14px; }
+
+/* Aufgabe */
+.flavor { font-family: var(--font-display); font-size: 18px; color: var(--fg); background: var(--frame-soft); padding: 10px 14px; border-radius: var(--radius); }
+.flavor b { color: var(--ink); }
+.story { font-size: 18px; line-height: 1.6; background: var(--ink-tint); padding: 12px 16px; border-left: 4px solid var(--ink); border-radius: 0 var(--radius) var(--radius) 0; }
+.fig { display: flex; justify-content: center; }
+.fig svg { width: 100%; max-width: 420px; height: auto; }
+.steps { display: grid; gap: 12px; }
+.step { display: grid; gap: 8px; padding: 12px 14px; border: 2px solid var(--grid); border-radius: var(--radius); }
+.step.active { border-color: var(--ink); }
+.step.solved { border-color: var(--frame); background: var(--frame-soft); }
+.step.locked { opacity: .5; }
+.q { font-weight: 700; }
+.answer-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.answer-row label { font-family: "Cambria Math", Georgia, serif; font-size: 19px; }
+.answer-row input { width: 9.5em; max-width: 100%; font: inherit; font-size: 18px; padding: 7px 10px; border: 2px solid var(--muted); border-radius: 8px; background: var(--paper); color: var(--fg); font-variant-numeric: tabular-nums; }
+.answer-row input:focus { border-color: var(--ink); outline: none; box-shadow: 0 0 0 3px var(--ink-tint); }
+.unit { font-size: 17px; }
+.solved-line { font-family: "Cambria Math", Georgia, serif; font-size: 18px; }
+.solved-line .ok { color: var(--good); font-family: var(--font-body); font-weight: 700; font-size: 15px; margin-left: 6px; }
+.tools { display: flex; gap: 8px; flex-wrap: wrap; }
+.msg { padding: 9px 12px; border-radius: 8px; font-size: 16px; }
+.msg.good { background: var(--frame-soft); color: var(--fg); border-left: 4px solid var(--good); }
+.msg.bad { background: var(--bad-soft); color: var(--fg); border-left: 4px solid var(--bad); }
+.msg.hint { background: var(--gold-soft); color: var(--fg); border-left: 4px solid var(--gold); }
+.msg.sol { background: var(--ink-soft); color: var(--fg); border-left: 4px solid var(--ink); }
+.msg .who { font-family: var(--font-display); font-weight: 700; }
+.next-row { display: flex; justify-content: flex-end; gap: 10px; flex-wrap: wrap; }
+.round-note { font-size: 14px; color: var(--muted); }
+
+/* Ende */
+.finale { text-align: center; justify-items: center; }
+.finale h2 { font-size: clamp(30px, 6vw, 42px); color: var(--ink); }
+.rank { font-family: var(--font-display); font-size: 24px; font-weight: 700; color: var(--gold); }
+.big-coins { font-size: 40px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.summary { width: 100%; overflow-x: auto; }
+.summary table { border-collapse: collapse; margin: 0 auto; font-size: 15px; font-variant-numeric: tabular-nums; }
+.summary td, .summary th { padding: 5px 10px; border-bottom: 1px solid var(--grid); text-align: left; }
+.summary th { color: var(--muted); font-weight: 400; }
+
+/* Figuren */
+.sv-line { stroke: var(--ink); stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.sv-dash { stroke: var(--ink); stroke-width: 1.4; fill: none; stroke-dasharray: 5 4; }
+.sv-key { stroke: var(--ink); stroke-width: 3.2; fill: none; stroke-linecap: round; }
+.sv-help { stroke: var(--muted); stroke-width: 1.3; fill: none; stroke-dasharray: 4 4; }
+.sv-face { fill: var(--ink-tint); stroke: none; }
+.sv-ra { stroke: var(--fg); stroke-width: 1.3; fill: none; }
+.sv-lab { font-family: var(--font-body); font-size: 15px; fill: var(--fg); paint-order: stroke; stroke: var(--paper); stroke-width: 5px; stroke-linejoin: round; }
+.sv-lab.q { fill: var(--bad); font-weight: 700; }
+.sv-dot { fill: var(--ink); }
+
+@keyframes pop { 0% { transform: scale(.96); opacity: .4; } 100% { transform: scale(1); opacity: 1; } }
+.pop { animation: pop .25s ease-out; }
+@keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+.shake { animation: shake .25s ease-in-out 2; }
+@media (prefers-reduced-motion: reduce) { .pop, .shake { animation: none; } .grade { transition: none; } }
+
+@media (max-width: 520px) {
+  body { font-size: 16px; }
+  .card { padding: 12px 12px 16px; }
+  .card-title { font-size: 17px; }
+  .brand svg { width: 52px; height: 52px; }
+}
+</style>
+
+<div class="wrap">
+  <header class="head">
+    <div class="brand">
+      <svg width="64" height="64" viewBox="0 0 64 64" aria-hidden="true">
+        <path d="M6 54 L32 12 L58 54 Z" fill="none" stroke="var(--ink)" stroke-width="2.5" stroke-linejoin="round"/>
+        <path d="M14 41 H50 M20 31 H44 M26 21.5 H38" stroke="var(--ink)" stroke-width="1.6" stroke-dasharray="4 3"/>
+        <path d="M2 56 C10 48 12 40 8 32 C16 36 18 46 14 56" fill="var(--frame-soft)" stroke="var(--frame)" stroke-width="2"/>
+        <path d="M62 56 C55 47 54 40 58 30 C50 35 48 46 52 56" fill="var(--frame-soft)" stroke="var(--frame)" stroke-width="2"/>
+        <circle cx="32" cy="33" r="3" fill="var(--gold)"/>
+      </svg>
+      <div>
+        <h1>Expedition Spitzkörper</h1>
+        <p>Volumen von Pyramide und Kegel im Dschungel von Südamerika</p>
+      </div>
+    </div>
+    <div class="purse" aria-live="polite" title="Gesammelte Goldmünzen">
+      <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><circle cx="13" cy="13" r="11" fill="var(--gold)"/><circle cx="13" cy="13" r="7.5" fill="none" stroke="var(--gold-soft)" stroke-width="1.5"/><path d="M10 13 L13 8 L16 13 L13 18 Z" fill="var(--gold-soft)"/></svg>
+      <span id="coins">0</span> <small>Goldmünzen</small>
+    </div>
+  </header>
+
+  <main id="app" class="stack"></main>
+</div>
+
+<script>
+(() => {
+"use strict";
+
+/* ---------- Hilfen ---------- */
+const $ = (s) => document.querySelector(s);
+const ri = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+const shuffle = (arr) => { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const fmt = (x, d = 2) => Number(x).toLocaleString("de-DE", { maximumFractionDigits: d });
+const PI = Math.PI;
+const store = {
+  get(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} },
+};
+
+const TRIPLES = [[3,4,5],[6,8,10],[5,12,13],[9,12,15],[8,15,17],[12,16,20],[7,24,25],[20,21,29],[12,5,13],[4,3,5],[8,6,10],[12,9,15],[15,8,17],[16,12,20]];
+// Dreiecke (Kathete p, Kathete q, Hypotenuse c) mit einem vernünftigen Verhältnis q/p
+function triple(minRatio, maxRatio, scale = 1) {
+  const ok = TRIPLES.filter(([p, q]) => q / p >= minRatio && q / p <= maxRatio);
+  const [p, q, c] = pick(ok);
+  return [p * scale, q * scale, c * scale];
+}
+// Pyramiden mit ganzzahligem a, h, Seitenkante s: s² = h² + a²/2
+const EDGE = (() => {
+  const out = [];
+  for (let k = 2; k <= 9; k++) {
+    const n = 2 * k * k;
+    for (let f1 = 1; f1 * f1 < n; f1++) {
+      if (n % f1) continue;
+      const f2 = n / f1;
+      if ((f1 + f2) % 2) continue;
+      const s = (f1 + f2) / 2, h = (f2 - f1) / 2;
+      if (h >= 3 && h / (2 * k) >= 0.4 && h / (2 * k) <= 2.2) out.push({ a: 2 * k, h, s, k });
+    }
+  }
+  return out;
+})();
+
+/* ---------- Zeichnungen ---------- */
+const K = 0.5, ANG = 35 * PI / 180;
+function proj(x, y, z) { return [x + y * K * Math.cos(ANG), -(z + y * K * Math.sin(ANG))]; }
+function fitter(pts, W, H, pad) {
+  const xs = pts.map(p => p[0]), ys = pts.map(p => p[1]);
+  const x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys);
+  const s = Math.min((W - 2 * pad) / (x1 - x0), (H - 2 * pad) / (y1 - y0));
+  const ox = (W - (x1 - x0) * s) / 2 - x0 * s, oy = (H - (y1 - y0) * s) / 2 - y0 * s;
+  return (p) => [p[0] * s + ox, p[1] * s + oy];
+}
+const L = (p, q, cls) => `<line x1="${p[0].toFixed(1)}" y1="${p[1].toFixed(1)}" x2="${q[0].toFixed(1)}" y2="${q[1].toFixed(1)}" class="${cls}"/>`;
+const mid = (p, q, t = 0.5) => [p[0] + (q[0] - p[0]) * t, p[1] + (q[1] - p[1]) * t];
+function label(pos, text, dx = 0, dy = 0, anchor = "middle", isQ = false) {
+  return `<text x="${(pos[0] + dx).toFixed(1)}" y="${(pos[1] + dy).toFixed(1)}" text-anchor="${anchor}" dominant-baseline="middle" class="sv-lab${isQ ? " q" : ""}">${text}</text>`;
+}
+function rightAngle(c, p1, p2, s = 10) {
+  const u = (p) => { const dx = p[0] - c[0], dy = p[1] - c[1], n = Math.hypot(dx, dy); return [dx / n * s, dy / n * s]; };
+  const a = u(p1), b = u(p2);
+  return `<path d="M${c[0] + a[0]} ${c[1] + a[1]} L${c[0] + a[0] + b[0]} ${c[1] + a[1] + b[1]} L${c[0] + b[0]} ${c[1] + b[1]}" class="sv-ra"/>`;
+}
+
+// o = {a, b, h, key: 'hs' | 'edge' | null, labels: {a, b, h, hs, s}}
+function pyramidSVG(o) {
+  const W = 400, H = 290;
+  const { a, b, h } = o;
+  const raw = {
+    A: proj(0, 0, 0), B: proj(a, 0, 0), C: proj(a, b, 0), D: proj(0, b, 0),
+    S: proj(a / 2, b / 2, h), F: proj(a / 2, b / 2, 0), M: proj(a / 2, 0, 0), R: proj(a, b / 2, 0),
+  };
+  const f = fitter(Object.values(raw), W, H, 44);
+  const P = {}; for (const k in raw) P[k] = f(raw[k]);
+  let s = "";
+  s += `<path d="M${P.A} L${P.B} L${P.S} Z" class="sv-face"/><path d="M${P.B} L${P.C} L${P.S} Z" class="sv-face"/>`;
+  s += L(P.A, P.D, "sv-dash") + L(P.D, P.C, "sv-dash") + L(P.D, P.S, "sv-dash");
+  s += L(P.A, P.B, "sv-line") + L(P.B, P.C, "sv-line") + L(P.A, P.S, "sv-line") + L(P.B, P.S, "sv-line") + L(P.C, P.S, "sv-line");
+  s += L(P.F, P.S, "sv-dash") + rightAngle(P.F, P.S, P.M, 10);
+  if (o.key === "hs") { s += L(P.M, P.S, "sv-key") + L(P.M, P.F, "sv-help"); }
+  if (o.key === "edge") { s += L(P.B, P.S, "sv-key") + L(P.F, P.B, "sv-help"); }
+  s += `<circle cx="${P.F[0]}" cy="${P.F[1]}" r="2.6" class="sv-dot"/>`;
+  const lb = o.labels || {};
+  if (lb.a) s += label(mid(P.A, P.B), lb.a, 0, 18, "middle", lb.a.includes("?"));
+  if (lb.b) s += label(mid(P.B, P.C), lb.b, 10, 8, "start", lb.b.includes("?"));
+  if (lb.h) s += label(mid(P.F, P.S, 0.5), lb.h, 9, 0, "start", lb.h.includes("?"));
+  if (lb.hs) s += label(mid(P.M, P.S, 0.38), lb.hs, -16, 0, "end", lb.hs.includes("?"));
+  if (lb.s) s += label(mid(P.B, P.S, 0.5), lb.s, 10, 4, "start", lb.s.includes("?"));
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Skizze einer Pyramide">${s}</svg>`;
+}
+
+// o = {r, h, key: 's' | null, diameter: bool, labels: {r, d, h, s}}
+function coneSVG(o) {
+  const W = 400, H = 300;
+  const r = o.r, h = o.h, ry = r * 0.33;
+  const raw = [[-r, 0], [r, 0], [0, -h], [0, ry], [0, -ry]];
+  const f = fitter(raw, W, H, 40);
+  const O = f([0, 0]), R = f([r, 0]), Lp = f([-r, 0]), S = f([0, -h]);
+  const rx = R[0] - O[0], rys = f([0, ry])[1] - O[1];
+  let s = "";
+  s += `<path d="M${Lp} L${S} L${R} A${rx} ${rys} 0 0 1 ${Lp} Z" class="sv-face"/>`;
+  s += `<path d="M${Lp} A${rx} ${rys} 0 0 1 ${R}" class="sv-dash"/>`;
+  s += `<path d="M${Lp} A${rx} ${rys} 0 0 0 ${R}" class="sv-line"/>`;
+  s += L(Lp, S, "sv-line") + L(R, S, o.key === "s" ? "sv-key" : "sv-line");
+  s += L(O, S, "sv-dash") + rightAngle(O, S, R, 10);
+  s += o.diameter ? L(Lp, R, "sv-line") : L(O, R, "sv-line");
+  s += `<circle cx="${O[0]}" cy="${O[1]}" r="2.6" class="sv-dot"/>`;
+  const lb = o.labels || {};
+  if (lb.r) s += label(mid(O, R), lb.r, 0, 15, "middle", lb.r.includes("?"));
+  if (lb.d) s += label(O, lb.d, 0, rys + 14, "middle", lb.d.includes("?"));
+  if (lb.h) s += label(mid(O, S, 0.55), lb.h, -9, 0, "end", lb.h.includes("?"));
+  if (lb.s) s += label(mid(R, S, 0.5), lb.s, 12, 0, "start", lb.s.includes("?"));
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Skizze eines Kegels">${s}</svg>`;
+}
+
+/* ---------- Texte ---------- */
+const PROF = "Prof. Pyramus";
+const FLAVOR = {
+  A: ["Hinter einem Vorhang aus Lianen taucht eine kleine Steinpyramide auf. <b>" + PROF + "</b> will sofort wissen, wie viel Stein darin steckt.",
+      "Kevin ist über eine Pyramide gestolpert. Wörtlich. Miss sie aus, bevor er es noch einmal tut.",
+      "Eine Pyramide, überwuchert von Orchideen. Kevin will sie mit nach Hause nehmen. Wie viel Stein müsste er schleppen?"],
+  B: ["Ein kegelförmiger Termitenhügel. Die Termiten schauen misstrauisch, als ihr das Maßband auspackt.",
+      "Lorenzo das Lama hat einen Kegel aus Lehm entdeckt und fragt sich, ob er hineinpasst.",
+      "Ein Vulkan im Miniformat, zum Glück erloschen. Er ist ein perfekter Kegel."],
+  C: ["Auf der Spitze dieser Pyramide sitzt ein schlecht gelaunter Tukan. Die Höhe misst heute niemand direkt. Zum Glück kennt ihr die Seitenhöhe.",
+      "Die Pyramide ist innen hohl, sagt Kevin. Sie ist es nicht. Rechnet trotzdem aus, wie hoch sie ist."],
+  D: ["Ein Steinkegel mit Inschrift: »Wer meine Höhe kennt, darf passieren.« Ihr kennt nur Radius und Mantellinie. Das reicht.",
+      "Kevin hat die schräge Seite des Kegels gemessen statt der Höhe. Typisch Kevin. Rettet die Messung mit Pythagoras."],
+  E: ["Die Grundseite dieser Pyramide liegt unter Moos. Kevin will nicht graben. Rechnet sie lieber aus.",
+      "Nebel verdeckt den Boden. Ihr seht nur die Höhe und die Seitenhöhe der Pyramide."],
+  F: ["Ein Altar in Pyramidenform, aber mit rechteckiger Grundfläche. Die Urbewohner hatten offenbar keine Lust auf Quadrate.",
+      "Diese Pyramide ist länger als breit. Lorenzo findet das unordentlich."],
+  G: ["Ein Kegelhut aus Gold liegt im Staub. Kevin hat ihn schon aufgesetzt. Bitte vorher das Volumen ausrechnen.",
+      "Am Flussufer steht ein kegelförmiger Wachturm. Der Boden ist ein Kreis, gemessen habt ihr den Durchmesser."],
+  H: ["Die Pyramide des Mondes. Nur die Seitenkanten sind noch gut erhalten. Ihr braucht die Diagonale der Grundfläche.",
+      "Ganz oben im Tempel klemmt eine Pyramide mit messerscharfen Kanten. Lorenzo hält Abstand."],
+};
+const GOOD = [
+  "Richtig! Die Steintür knarrt auf.",
+  "Richtig! Lorenzo nickt anerkennend und spuckt nur ein ganz kleines bisschen.",
+  "Stimmt! Kevin will ein Selfie mit deinem Ergebnis.",
+  "Richtig! Irgendwo im Blätterdach jubelt ein Brüllaffe.",
+  "Genau! " + PROF + " notiert es feierlich ins Tagebuch.",
+];
+const BAD = [
+  "Klick … eine Falltür! Zum Glück liegt unten ein Kissen. Prüfe deine Rechnung noch einmal.",
+  "Ein Pfeil zischt knapp an Kevins Hut vorbei. Das Ergebnis stimmt noch nicht.",
+  "Der Boden bebt ein wenig. Noch nicht richtig. Versuch es noch einmal.",
+  "Ein Tukan schüttelt den Kopf. Da steckt noch ein Fehler drin.",
+];
+
+/* ---------- Aufgaben mit Skizze (Typ A–H) ---------- */
+const CM = "cm", CM3 = "cm³";
+const Vpyr = (G, h) => G * h / 3;
+const Vcone = (r, h) => PI * r * r * h / 3;
+const coneSol = (r, h, u) => `V = ⅓ · π · ${fmt(r)}² · ${fmt(h)} = ${fmt(r * r * h / 3)}π ≈ <b>${fmt(Vcone(r, h))} ${u}³</b>`;
+const pyrSol = (a, h, u) => `V = ⅓ · ${fmt(a)}² · ${fmt(h)} = ⅓ · ${fmt(a * a)} · ${fmt(h)} ≈ <b>${fmt(Vpyr(a * a, h))} ${u}³</b>`;
+const HINT_VP = "Volumen der Pyramide: V = ⅓ · G · h. Bei quadratischer Grundfläche ist G = a².";
+const HINT_VC = "Volumen des Kegels: V = ⅓ · π · r² · h. Die Grundfläche ist ein Kreis: G = π · r².";
+
+const GEN = {
+  A() {
+    const a = pick([4, 5, 6, 8, 9, 10, 12]), h = ri(5, 15);
+    return { letter: "A", stars: 1, title: "Bestimme das Volumen der quadratischen Pyramide",
+      svg: pyramidSVG({ a, b: a, h, labels: { a: `a = ${a} cm`, h: `h = ${h} cm` } }),
+      steps: [{ q: "Volumen der Pyramide", sym: "V", unit: CM3, value: Vpyr(a * a, h), kind: "V", hint: HINT_VP, sol: pyrSol(a, h, CM) }] };
+  },
+  B() {
+    const r = ri(2, 9), h = ri(4, 15);
+    return { letter: "B", stars: 1, title: "Bestimme das Volumen des Kegels",
+      svg: coneSVG({ r, h, labels: { r: `r = ${r} cm`, h: `h = ${h} cm` } }),
+      steps: [{ q: "Volumen des Kegels", sym: "V", unit: CM3, value: Vcone(r, h), kind: "V", hint: HINT_VC, sol: coneSol(r, h, CM) }] };
+  },
+  C() {
+    const [p, q, c] = triple(0.6, 2.4); const a = 2 * p, h = q;
+    return { letter: "C", stars: 2, title: "Bestimme das Volumen der quadratischen Pyramide",
+      svg: pyramidSVG({ a, b: a, h, key: "hs", labels: { a: `a = ${a} cm`, hs: `hₛ = ${c} cm`, h: "h = ?" } }),
+      steps: [
+        { q: "Körperhöhe der Pyramide", sym: "h", unit: CM, value: h,
+          hint: "Das rechtwinklige Dreieck besteht aus h, a/2 und hₛ. Die Seitenhöhe hₛ ist die Hypotenuse: h² = hₛ² − (a/2)².",
+          sol: `a/2 = ${p} cm; h = √(${c}² − ${p}²) = √(${c * c} − ${p * p}) = √${c * c - p * p} = <b>${h} cm</b>` },
+        { q: "Volumen der Pyramide", sym: "V", unit: CM3, value: Vpyr(a * a, h), kind: "V", hint: HINT_VP, sol: pyrSol(a, h, CM) },
+      ] };
+  },
+  D() {
+    const [r, h, s] = triple(0.7, 3);
+    return { letter: "D", stars: 2, title: "Bestimme das Volumen des Kegels",
+      svg: coneSVG({ r, h, key: "s", labels: { r: `r = ${r} cm`, s: `s = ${s} cm`, h: "h = ?" } }),
+      steps: [
+        { q: "Höhe des Kegels", sym: "h", unit: CM, value: h,
+          hint: "Das Dreieck aus h, r und der Mantellinie s ist rechtwinklig. s ist die Hypotenuse: h² = s² − r².",
+          sol: `h = √(${s}² − ${r}²) = √(${s * s} − ${r * r}) = √${s * s - r * r} = <b>${h} cm</b>` },
+        { q: "Volumen des Kegels", sym: "V", unit: CM3, value: Vcone(r, h), kind: "V", hint: HINT_VC, sol: coneSol(r, h, CM) },
+      ] };
+  },
+  E() {
+    const [p, q, c] = triple(0.6, 2.4); const a = 2 * p, h = q;
+    return { letter: "E", stars: 2, title: "Bestimme das Volumen der quadratischen Pyramide",
+      svg: pyramidSVG({ a, b: a, h, key: "hs", labels: { a: "a = ?", hs: `hₛ = ${c} cm`, h: `h = ${h} cm` } }),
+      steps: [
+        { q: "Grundseite der Pyramide", sym: "a", unit: CM, value: a,
+          hint: "Im Dreieck aus h, a/2 und hₛ fehlt diesmal a/2: (a/2)² = hₛ² − h². Danach verdoppeln!",
+          sol: `a/2 = √(${c}² − ${h}²) = √(${c * c} − ${h * h}) = √${p * p} = ${p} cm, also a = <b>${a} cm</b>` },
+        { q: "Volumen der Pyramide", sym: "V", unit: CM3, value: Vpyr(a * a, h), kind: "V", hint: HINT_VP, sol: pyrSol(a, h, CM) },
+      ] };
+  },
+  F() {
+    const [p, q, c] = triple(0.6, 2); const b = 2 * p, h = q;
+    let a = b + pick([4, 6, 8, 10, -4]); if (a < 6) a = b + 6;
+    return { letter: "F", stars: 2, title: "Bestimme das Volumen der Pyramide mit rechteckiger Grundfläche",
+      svg: pyramidSVG({ a, b, h, key: "hs", labels: { a: `a = ${a} cm`, b: `b = ${b} cm`, hs: `hₐ = ${c} cm`, h: "h = ?" } }),
+      steps: [
+        { q: "Körperhöhe der Pyramide", sym: "h", unit: CM, value: h,
+          hint: "hₐ ist die Höhe der Seitenfläche über a. Im Dreieck mit h steht deshalb die halbe andere Seite b/2: h² = hₐ² − (b/2)².",
+          sol: `b/2 = ${p} cm; h = √(${c}² − ${p}²) = √${c * c - p * p} = <b>${h} cm</b>` },
+        { q: "Volumen der Pyramide", sym: "V", unit: CM3, value: a * b * h / 3, kind: "V",
+          hint: "Rechteck als Grundfläche: G = a · b, dann V = ⅓ · G · h.",
+          sol: `V = ⅓ · ${a} · ${b} · ${h} = ⅓ · ${a * b * h} ≈ <b>${fmt(a * b * h / 3)} cm³</b>` },
+      ] };
+  },
+  G() {
+    const [r, h, s] = triple(0.8, 3); const d = 2 * r;
+    return { letter: "G", stars: 2, title: "Bestimme das Volumen des Kegels",
+      svg: coneSVG({ r, h, key: "s", diameter: true, labels: { d: `d = ${d} cm`, s: `s = ${s} cm`, h: "h = ?" } }),
+      steps: [
+        { q: "Höhe des Kegels", sym: "h", unit: CM, value: h,
+          hint: "Achtung, gegeben ist der Durchmesser! Erst r = d : 2, dann h² = s² − r².",
+          sol: `r = ${d} : 2 = ${r} cm; h = √(${s}² − ${r}²) = √${s * s - r * r} = <b>${h} cm</b>` },
+        { q: "Volumen des Kegels", sym: "V", unit: CM3, value: Vcone(r, h), kind: "V", hint: HINT_VC, sol: coneSol(r, h, CM) },
+      ] };
+  },
+  H() {
+    const e = pick(EDGE); const { a, h, s, k } = e;
+    return { letter: "H", stars: 3, title: "Bestimme das Volumen der quadratischen Pyramide",
+      svg: pyramidSVG({ a, b: a, h, key: "edge", labels: { a: `a = ${a} cm`, s: `s = ${s} cm`, h: "h = ?" } }),
+      steps: [
+        { q: "Körperhöhe der Pyramide", sym: "h", unit: CM, value: h,
+          hint: "Zwei Schritte: Halbe Diagonale d/2 mit (d/2)² = (a/2)² + (a/2)². Dann ist s die Hypotenuse: h² = s² − (d/2)².",
+          sol: `(d/2)² = ${k}² + ${k}² = ${2 * k * k}; h = √(${s}² − ${2 * k * k}) = √${h * h} = <b>${h} cm</b>` },
+        { q: "Volumen der Pyramide", sym: "V", unit: CM3, value: Vpyr(a * a, h), kind: "V", hint: HINT_VP, sol: pyrSol(a, h, CM) },
+      ] };
+  },
+};
+
+/* ---------- Textaufgaben ---------- */
+const TEXT = {
+  1: [
+    () => { const a = pick([10, 12, 15, 20, 24]), h = ri(8, 18);
+      return { story: `Ihr findet eine Pyramide aus Stein. Die Grundfläche ist ein Quadrat mit der Seite a = ${a} m. Die Pyramide ist ${h} m hoch.<br>Wie groß ist ihr Volumen?`,
+        svg: pyramidSVG({ a, b: a, h, labels: { a: `a = ${a} m`, h: `h = ${h} m` } }),
+        steps: [{ q: "Volumen der Steinpyramide", sym: "V", unit: "m³", value: Vpyr(a * a, h), kind: "V", hint: HINT_VP, sol: pyrSol(a, h, "m") }] }; },
+    () => { const r = ri(2, 5), h = ri(3, 8);
+      return { story: `Ein Termitenhügel hat die Form eines Kegels. Der Radius ist r = ${r} m, die Höhe ist h = ${h} m.<br>Berechne das Volumen des Termitenhügels.`,
+        svg: coneSVG({ r, h, labels: { r: `r = ${r} m`, h: `h = ${h} m` } }),
+        steps: [{ q: "Volumen des Termitenhügels", sym: "V", unit: "m³", value: Vcone(r, h), kind: "V", hint: HINT_VC, sol: coneSol(r, h, "m") }] }; },
+    () => { const r = ri(3, 8), h = ri(4, 9);
+      return { story: `Lorenzo das Lama frisst Mais von einem Haufen. Der Haufen ist ein Kegel mit r = ${r} dm und h = ${h} dm.<br>Wie viel Mais liegt im Haufen? Gib das Volumen an.`,
+        svg: coneSVG({ r, h, labels: { r: `r = ${r} dm`, h: `h = ${h} dm` } }),
+        steps: [{ q: "Volumen des Maishaufens", sym: "V", unit: "dm³", value: Vcone(r, h), kind: "V", hint: HINT_VC, sol: coneSol(r, h, "dm") }] }; },
+    () => { const a = pick([20, 24, 30, 36]), h = ri(15, 30);
+      return { story: `Kevin baut am Fluss eine Sandburg. Sie sieht aus wie eine Pyramide mit quadratischer Grundfläche: a = ${a} cm und h = ${h} cm.<br>Wie viel Sand steckt in Kevins Pyramide?`,
+        svg: pyramidSVG({ a, b: a, h, labels: { a: `a = ${a} cm`, h: `h = ${h} cm` } }),
+        steps: [{ q: "Volumen der Sandpyramide", sym: "V", unit: "cm³", value: Vpyr(a * a, h), kind: "V", hint: HINT_VP, sol: pyrSol(a, h, "cm") }] }; },
+  ],
+  2: [
+    () => { const [r, h, s] = triple(0.8, 2, 0.5);
+      return { story: `Euer Zelt hat die Form eines Kegels. Der Boden ist ein Kreis mit dem Radius r = ${fmt(r)} m. Die schräge Zeltwand (Mantellinie) ist s = ${fmt(s)} m lang.`,
+        svg: coneSVG({ r, h, key: "s", labels: { r: `r = ${fmt(r)} m`, s: `s = ${fmt(s)} m`, h: "h = ?" } }),
+        steps: [
+          { q: "Wie hoch ist das Zelt?", sym: "h", unit: "m", value: h, hint: "Die Mantellinie s ist die Hypotenuse: h² = s² − r².", sol: `h = √(${fmt(s)}² − ${fmt(r)}²) = √${fmt(s * s - r * r)} = <b>${fmt(h)} m</b>` },
+          { q: "Wie groß ist das Volumen im Zelt?", sym: "V", unit: "m³", value: Vcone(r, h), kind: "V", hint: HINT_VC, sol: coneSol(r, h, "m") },
+        ] }; },
+    () => { const [p, q, c] = triple(0.7, 2); const a = 2 * p;
+      return { story: `Von einer Pyramide seht ihr nur einen Teil. Die Grundfläche ist ein Quadrat mit a = ${a} m. Die Höhe einer Seitenfläche ist hₛ = ${c} m.`,
+        svg: pyramidSVG({ a, b: a, h: q, key: "hs", labels: { a: `a = ${a} m`, hs: `hₛ = ${c} m`, h: "h = ?" } }),
+        steps: [
+          { q: "Wie hoch ist die Pyramide?", sym: "h", unit: "m", value: q, hint: "Dreieck aus h, a/2 und hₛ. hₛ ist die Hypotenuse.", sol: `h = √(${c}² − ${p}²) = √${c * c - p * p} = <b>${q} m</b>` },
+          { q: "Wie groß ist ihr Volumen?", sym: "V", unit: "m³", value: Vpyr(a * a, q), kind: "V", hint: HINT_VP, sol: pyrSol(a, q, "m") },
+        ] }; },
+    () => { const [r, h, s] = triple(1, 3); const d = 2 * r;
+      return { story: `Ein Hut aus Gold hat die Form eines Kegels. Der Durchmesser ist d = ${d} cm. Die schräge Seite ist s = ${s} cm lang.`,
+        svg: coneSVG({ r, h, key: "s", diameter: true, labels: { d: `d = ${d} cm`, s: `s = ${s} cm`, h: "h = ?" } }),
+        steps: [
+          { q: "Wie hoch ist der Hut?", sym: "h", unit: "cm", value: h, hint: "Zuerst r = d : 2. Dann h² = s² − r².", sol: `r = ${r} cm; h = √(${s}² − ${r}²) = √${s * s - r * r} = <b>${h} cm</b>` },
+          { q: "Wie groß ist das Volumen des Huts?", sym: "V", unit: "cm³", value: Vcone(r, h), kind: "V", hint: HINT_VC, sol: coneSol(r, h, "cm") },
+        ] }; },
+    () => { const [p, q, c] = triple(0.6, 1.6); const b = 2 * p, a = b + pick([2, 4, 6]);
+      return { story: `Ein Altar hat die Form einer Pyramide. Die Grundfläche ist ein Rechteck: a = ${a} dm, b = ${b} dm. Die Seitenfläche über a hat die Höhe hₐ = ${c} dm.`,
+        svg: pyramidSVG({ a, b, h: q, key: "hs", labels: { a: `a = ${a} dm`, b: `b = ${b} dm`, hs: `hₐ = ${c} dm`, h: "h = ?" } }),
+        steps: [
+          { q: "Wie hoch ist der Altar?", sym: "h", unit: "dm", value: q, hint: "Im Dreieck mit hₐ steht die halbe Seite b/2: h² = hₐ² − (b/2)².", sol: `h = √(${c}² − ${p}²) = √${c * c - p * p} = <b>${q} dm</b>` },
+          { q: "Wie groß ist sein Volumen?", sym: "V", unit: "dm³", value: a * b * q / 3, kind: "V", hint: "G = a · b, dann V = ⅓ · G · h.", sol: `V = ⅓ · ${a} · ${b} · ${q} ≈ <b>${fmt(a * b * q / 3)} dm³</b>` },
+        ] }; },
+  ],
+  3: [
+    () => { const { a, h, s, k } = pick(EDGE.filter(e => e.a <= 12)); const V = Vpyr(a * a, h), m = V * 19.3 / 1000;
+      return { story: `Im Schatzraum steht eine kleine Pyramide aus massivem Gold. Ihre Grundfläche ist ein Quadrat mit a = ${a} cm, jede Seitenkante ist s = ${s} cm lang. 1 cm³ Gold wiegt 19,3 g. Kevin will sie in den Rucksack stecken. Schafft er das?`,
+        svg: pyramidSVG({ a, b: a, h, key: "edge", labels: { a: `a = ${a} cm`, s: `s = ${s} cm`, h: "h = ?" } }),
+        steps: [
+          { q: "Höhe der Goldpyramide", sym: "h", unit: "cm", value: h, hint: "Erst die halbe Diagonale: (d/2)² = (a/2)² + (a/2)². Dann h² = s² − (d/2)².", sol: `(d/2)² = ${k}² + ${k}² = ${2 * k * k}; h = √(${s}² − ${2 * k * k}) = <b>${h} cm</b>` },
+          { q: "Volumen der Goldpyramide", sym: "V", unit: "cm³", value: V, kind: "V", hint: HINT_VP, sol: pyrSol(a, h, "cm") },
+          { q: "Masse der Goldpyramide in kg", sym: "m", unit: "kg", value: m, hint: "Masse = Volumen · 19,3 g. Dann durch 1000 teilen, um kg zu erhalten.", sol: `m = ${fmt(V)} · 19,3 g ≈ ${fmt(V * 19.3)} g ≈ <b>${fmt(m)} kg</b>` },
+        ] }; },
+    () => { const [r, h, s] = triple(1, 2, 2); const d = 2 * r, V = Vcone(r, h);
+      return { story: `Am Opferbrunnen hängt ein Trichter in Kegelform, die Spitze zeigt nach unten. Oben ist er d = ${d} cm breit, die schräge Wand ist s = ${s} cm lang. Wie viel Liter Wasser passen hinein? (1 l = 1000 cm³)`,
+        svg: coneSVG({ r, h, key: "s", diameter: true, labels: { d: `d = ${d} cm`, s: `s = ${s} cm`, h: "h = ?" } }),
+        steps: [
+          { q: "Höhe des Trichters", sym: "h", unit: "cm", value: h, hint: "r = d : 2, dann h² = s² − r².", sol: `r = ${r} cm; h = √(${s}² − ${r}²) = <b>${h} cm</b>` },
+          { q: "Fassungsvermögen in Liter", sym: "V", unit: "l", value: V / 1000, hint: "Berechne V in cm³ und teile durch 1000.", sol: `V = ⅓ · π · ${r}² · ${h} ≈ ${fmt(V)} cm³ ≈ <b>${fmt(V / 1000)} l</b>` },
+        ] }; },
+    () => { const [r, h, s] = triple(0.6, 1.4); const V = Vcone(r, h), n = Math.ceil(V / 10);
+      return { story: `Eine Falle im Tempel hat einen Sandhaufen in Kegelform hinterlassen: Radius r = ${r} dm, Mantellinie s = ${s} dm. Kevin trägt den Sand mit einem 10-Liter-Eimer weg. Wie oft muss er laufen? (1 dm³ = 1 l)`,
+        svg: coneSVG({ r, h, key: "s", labels: { r: `r = ${r} dm`, s: `s = ${s} dm`, h: "h = ?" } }),
+        steps: [
+          { q: "Höhe des Sandhaufens", sym: "h", unit: "dm", value: h, hint: "h² = s² − r².", sol: `h = √(${s}² − ${r}²) = <b>${h} dm</b>` },
+          { q: "Volumen des Sandhaufens", sym: "V", unit: "l", value: V, kind: "V", hint: HINT_VC + " 1 dm³ = 1 l.", sol: coneSol(r, h, "dm") + " = " + fmt(V) + " l" },
+          { q: "Anzahl der Eimer", sym: "n", unit: "Eimer", value: n, exact: true, hint: "Teile durch 10 und runde auf: Auch ein halb voller letzter Eimer ist ein Weg.", sol: `${fmt(V)} : 10 ≈ ${fmt(V / 10)}, aufgerundet <b>${n} Eimer</b>` },
+        ] }; },
+    () => { const [p, q, c] = triple(0.8, 1.6); const a = 2 * p; const [r, h2, s2] = triple(0.8, 2);
+      const VA = Vpyr(a * a, q), VB = Vcone(r, h2), D = Math.abs(VA - VB);
+      return { story: `${PROF} streitet mit einer Kollegin: Welcher Tempel ist größer? Tempel 1 ist eine quadratische Pyramide mit a = ${a} m und Seitenhöhe hₛ = ${c} m. Tempel 2 ist ein Kegel mit r = ${r} m und Mantellinie s = ${s2} m.`,
+        svg: null,
+        steps: [
+          { q: "Volumen von Tempel 1 (Pyramide)", sym: "V₁", unit: "m³", value: VA, kind: "V", hint: "Zuerst h mit Pythagoras aus a/2 und hₛ, dann V = ⅓ · a² · h.", sol: `h = √(${c}² − ${p}²) = ${q} m; ` + pyrSol(a, q, "m") },
+          { q: "Volumen von Tempel 2 (Kegel)", sym: "V₂", unit: "m³", value: VB, kind: "V", hint: "Zuerst h mit h² = s² − r², dann V = ⅓ · π · r² · h.", sol: `h = √(${s2}² − ${r}²) = ${h2} m; ` + coneSol(r, h2, "m") },
+          { q: "Um wie viel m³ ist der größere Tempel größer?", sym: "Δ", unit: "m³", value: D, hint: "Großes Volumen minus kleines Volumen.", sol: `${fmt(Math.max(VA, VB))} − ${fmt(Math.min(VA, VB))} ≈ <b>${fmt(D)} m³</b> (Tempel ${VA > VB ? 1 : 2} ist größer)` },
+        ] }; },
+    () => { const r = ri(3, 7), h = ri(6, 14); const V = Math.round(Vcone(r, h) * 100) / 100; const G = PI * r * r;
+      return { story: `Ein Opfergefäß in Kegelform fasst genau V = ${fmt(V)} cm³. Sein Radius ist r = ${r} cm. Die Höhe hat jemand aus der Steintafel gekratzt. Rechne sie zurück!`,
+        svg: coneSVG({ r, h, labels: { r: `r = ${r} cm`, h: "h = ?" } }),
+        steps: [
+          { q: "Grundfläche des Gefäßes", sym: "G", unit: "cm²", value: G, hint: "G = π · r².", sol: `G = π · ${r}² ≈ <b>${fmt(G)} cm²</b>` },
+          { q: "Höhe des Gefäßes", sym: "h", unit: "cm", value: 3 * V / G, hint: "Stelle V = ⅓ · G · h nach h um: h = 3 · V : G.", sol: `h = 3 · ${fmt(V)} : ${fmt(G)} ≈ <b>${fmt(3 * V / G)} cm</b>` },
+        ] }; },
+  ],
+};
+
+/* ---------- Grade ---------- */
+const GRADES = {
+  1: { name: "Dschungelpfad", sub: "Grad 1", stars: "*", plan: ["A", "B", "A", "T", "B", "A", "T", "B"],
+       list: ["Quadratische Pyramide mit gegebener Höhe", "Kegel mit gegebener Höhe", "Kurze, einfache Textaufgaben"] },
+  2: { name: "Tempelruinen", sub: "Grad 2", stars: "**", plan: ["A", "B", "C", "D", "T", "E", "F", "T", "G", "T"],
+       list: ["Alles aus Grad 1", "Höhe, Seite oder Radius mit Pythagoras", "Pyramide mit rechteckiger Grundfläche", "Textaufgaben in einfacher Sprache"] },
+  3: { name: "Goldene Pyramide", sub: "Grad 3", stars: "*\n**", plan: ["AB", "C", "D", "E", "T", "F", "G", "H", "T", "H", "T"],
+       list: ["Alles aus Grad 2", "Pyramide mit Seitenkante (Diagonale)", "Knifflige Textaufgaben: Gold, Liter, Rückwärtsrechnen"] },
+};
+
+function buildTasks(grade) {
+  const pool = shuffle(TEXT[grade]);
+  let t = 0;
+  return GRADES[grade].plan.map((code) => {
+    if (code === "T") {
+      const task = pool[t++ % pool.length]();
+      return { ...task, letter: "T", stars: grade, title: "Textaufgabe aus dem Expeditionstagebuch", isText: true };
+    }
+    const L = code.length > 1 ? pick(code.split("")) : code;
+    const task = GEN[L]();
+    task.flavor = pick(FLAVOR[L]);
+    return task;
+  });
+}
+
+/* ---------- Zustand ---------- */
+let S = null;
+const app = $("#app");
+function setCoins(n) { $("#coins").textContent = n; }
+
+function parseNum(str) {
+  let s = String(str).trim().replace(/\s/g, "").replace(/[≈=]/g, "");
+  if (!s) return NaN;
+  if (s.includes(",") && s.includes(".")) s = s.replace(/\./g, "");
+  s = s.replace(",", ".").replace(/[^0-9.\-]/g, "");
+  return s ? parseFloat(s) : NaN;
+}
+function close(x, v, exact) {
+  if (exact) return x === v;
+  return Math.abs(x - v) <= Math.max(0.011, Math.abs(v) * 0.004);
+}
+
+/* ---------- Start ---------- */
+function renderStart() {
+  S = null; setCoins(0);
+  const card = (g) => {
+    const G = GRADES[g], best = store.get("spitz-best-" + g);
+    return `<button class="grade" data-grade="${g}" type="button">
+      <div class="g-top"><div><div class="g-sub">${G.sub}</div><h3>${G.name}</h3></div><div class="stars" aria-label="${g} von 3 Sternen">${G.stars}</div></div>
+      <ul>${G.list.map(x => `<li>${x}</li>`).join("")}</ul>
+      <div class="g-sub">${G.plan.length} Stationen</div>
+      ${best != null ? `<div class="best">Bester Fund bisher: ${best} Münzen</div>` : ""}
+      <div class="go">Expedition starten →</div>
+    </button>`;
+  };
+  app.innerHTML = `
+    <section class="card intro">
+      <div class="card-top"><div class="letter">✉</div><h2 class="card-title">Ein Brief aus dem Regenwald</h2><div class="stars"></div></div>
+      <p class="letterbox">Liebe Expeditionsmitglieder,<br>
+      tief im Dschungel Südamerikas haben wir Pyramiden, Kegeltürme und einen Schatzraum der Urbewohner entdeckt. Leider ist mein Assistent Kevin bei jeder Messung über etwas gestolpert, und Lorenzo das Lama hat das Maßband angeknabbert. Ich brauche euch: Berechnet die Volumen, öffnet die Tempeltüren und sammelt Gold.</p>
+      <p class="sig">Prof. Pyramus, irgendwo zwischen zwei Lianen</p>
+    </section>
+    <section class="grades" aria-label="Schwierigkeitsgrad wählen">${[1, 2, 3].map(card).join("")}</section>
+    ${packHTML()}`;
+  app.querySelectorAll(".grade").forEach(b => b.addEventListener("click", () => start(+b.dataset.grade)));
+}
+
+function packHTML(open = false) {
+  return `<details class="pack"${open ? " open" : ""}>
+    <summary>Formel-Rucksack öffnen</summary>
+    <div class="pack-grid">
+      <div><h4>Volumen von Spitzkörpern</h4><span class="f">V = ⅓ · G · h</span></div>
+      <div><h4>Grundflächen</h4><span class="f">Quadrat: G = a²</span><br><span class="f">Rechteck: G = a · b</span><br><span class="f">Kreis: G = π · r²</span></div>
+      <div><h4>Kegel</h4><span class="f">V = ⅓ · π · r² · h</span><br>Durchmesser gegeben? Erst r = d : 2.</div>
+      <div><h4>Satz des Pythagoras</h4><span class="f">a² + b² = c²</span><br><span class="f">a² = c² − b²</span><br>c ist die Hypotenuse, gegenüber dem rechten Winkel.</div>
+      <div><h4>Dreiecke in der Pyramide</h4><span class="f">h² + (a/2)² = hₛ²</span><br><span class="f">h² + (d/2)² = s²</span></div>
+      <div><h4>Dreieck im Kegel</h4><span class="f">h² + r² = s²</span><br>s ist die Mantellinie.</div>
+    </div>
+    <p class="round-note" style="margin-top:8px">Runde Ergebnisse auf zwei Nachkommastellen. Komma oder Punkt sind beide erlaubt.</p>
+  </details>`;
+}
+
+/* ---------- Spiel ---------- */
+function start(grade) {
+  const tasks = buildTasks(grade);
+  S = { grade, tasks, idx: 0, step: 0, coins: 0, max: tasks.reduce((s, t) => s + t.steps.length * 10, 0), log: [], tries: 0, hinted: false, msgs: [] };
+  setCoins(0);
+  renderTask(true);
+}
+
+function trailHTML() {
+  const n = S.tasks.length;
+  let h = "";
+  for (let i = 0; i < n; i++) {
+    const cls = i < S.idx ? "done" : i === S.idx ? "now" : "";
+    if (i > 0) h += `<span class="path ${i <= S.idx ? "done" : ""}"></span>`;
+    h += `<span class="stop ${cls}" title="Station ${i + 1}">${i < S.idx ? "✓" : i + 1}</span>`;
+  }
+  h += `<span class="path ${S.idx >= n ? "done" : ""}"></span><svg class="goal" width="34" height="30" viewBox="0 0 34 30" aria-label="Schatz"><path d="M3 28 L17 4 L31 28 Z" fill="var(--gold-soft)" stroke="var(--gold)" stroke-width="2.4" stroke-linejoin="round"/><circle cx="17" cy="19" r="3.4" fill="var(--gold)"/></svg>`;
+  return h;
+}
+
+function renderTask(fresh) {
+  const t = S.tasks[S.idx];
+  const G = GRADES[S.grade];
+  const showFig = t.svg && (!t.isText || t.figShown);
+  const stepsHTML = t.steps.map((st, i) => {
+    if (i < S.step || st.done) {
+      return `<div class="step solved"><div class="q">${letterOf(i, t)}${st.q}</div>
+        <div class="solved-line">${st.sym} ≈ ${fmt(st.value)} ${st.unit}<span class="ok">${st.revealed ? "gezeigt" : "geschafft"}</span></div>
+        ${st.revealed ? `<div class="msg sol">${st.sol}</div>` : ""}</div>`;
+    }
+    if (i > S.step) return `<div class="step locked"><div class="q">${letterOf(i, t)}${st.q}</div></div>`;
+    return `<div class="step active"><div class="q">${letterOf(i, t)}${st.q}</div>
+      <form class="answer-row" id="f-ans" autocomplete="off">
+        <label for="ans">${st.sym} =</label>
+        <input id="ans" inputmode="decimal" placeholder="z. B. 12,5" aria-describedby="feedback">
+        <span class="unit">${st.unit}</span>
+        <button class="btn" type="submit">Prüfen</button>
+      </form>
+      <div class="tools">
+        <button class="btn ghost" type="button" id="b-hint">Tipp von Lorenzo</button>
+        <button class="btn ghost" type="button" id="b-sol">Lösung zeigen</button>
+      </div>
+      <div id="feedback" aria-live="polite" style="display:grid;gap:8px">${S.msgs.join("")}</div>
+    </div>`;
+  }).join("");
+  const finished = S.step >= t.steps.length;
+  app.innerHTML = `
+    <section class="card" style="gap:8px">
+      <div class="trail" aria-label="Fortschritt der Expedition">${trailHTML()}</div>
+      <div class="trail-meta"><span>${G.sub}: ${G.name} · Station ${S.idx + 1} von ${S.tasks.length}</span><button class="linkish" type="button" id="b-quit">Expedition abbrechen</button></div>
+    </section>
+    <section class="card ${fresh ? "pop" : ""}" id="taskcard">
+      <div class="card-top"><div class="letter">${t.letter}</div><h2 class="card-title">${t.title}</h2><div class="stars" aria-label="${t.stars} von 3 Sternen">${starStr(t.stars)}</div></div>
+      ${t.flavor ? `<p class="flavor">${t.flavor}</p>` : ""}
+      ${t.story ? `<p class="story">${t.story}</p>` : ""}
+      ${showFig ? `<div class="fig">${t.svg}</div>` : ""}
+      <div class="steps">${stepsHTML}</div>
+      ${finished ? `<div class="msg good"><span class="who">${PROF}:</span> ${pick(["Hervorragend! Weiter geht’s, bevor Kevin etwas anfasst.", "Station gelöst. Lorenzo hat schon die nächste Liane gefunden.", "Notiert! Auf zur nächsten Entdeckung."])}</div>
+        <div class="next-row"><button class="btn gold" type="button" id="b-next">${S.idx + 1 < S.tasks.length ? "Weiter zur nächsten Station →" : "Zum Schatz →"}</button></div>` : ""}
+      <p class="round-note">Runde auf zwei Nachkommastellen. Den Formel-Rucksack findest du unten.</p>
+    </section>
+    ${packHTML()}`;
+  wire();
+}
+const letterOf = (i, t) => t.steps.length > 1 ? String.fromCharCode(97 + i) + ") " : "";
+const starStr = (n) => n === 3 ? "*\n**" : "*".repeat(n);
+
+function wire() {
+  const t = S.tasks[S.idx];
+  $("#b-quit").addEventListener("click", renderStart);
+  const f = $("#f-ans");
+  if (f) {
+    f.addEventListener("submit", (e) => { e.preventDefault(); check(); });
+    $("#b-hint").addEventListener("click", hint);
+    $("#b-sol").addEventListener("click", reveal);
+    setTimeout(() => { const i = $("#ans"); if (i) i.focus({ preventScroll: true }); }, 30);
+  }
+  const n = $("#b-next");
+  if (n) { n.addEventListener("click", next); n.focus({ preventScroll: true }); }
+}
+
+function check() {
+  const t = S.tasks[S.idx], st = t.steps[S.step];
+  const input = $("#ans");
+  const x = parseNum(input.value);
+  if (isNaN(x)) { S.msgs = [`<div class="msg bad">Gib eine Zahl ein, zum Beispiel 12,5.</div>`]; renderTask(); return; }
+  if (close(x, st.value, st.exact)) {
+    const earned = (S.tries === 0 && !S.hinted) ? 10 : 5;
+    S.coins += earned; setCoins(S.coins);
+    S.log.push({ station: S.idx + 1, letter: t.letter, q: st.q, coins: earned });
+    st.done = true; S.step++; S.tries = 0; S.hinted = false;
+    S.msgs = [`<div class="msg good">${pick(GOOD)} <b>+${earned} Münzen</b></div>`];
+    if (S.step < t.steps.length) { renderTask(); const fb = $("#feedback"); if (fb) fb.innerHTML = S.msgs.join(""); }
+    else { S.msgs = []; renderTask(); }
+    return;
+  }
+  S.tries++;
+  let extra = "";
+  if (st.kind === "V" && close(x, st.value * 3)) extra = " Dein Ergebnis ist genau dreimal so groß. Hast du das ⅓ vergessen?";
+  else if (st.kind === "V" && Math.abs(x - Math.round(st.value)) < 1 && Math.abs(x - st.value) < 1) extra = " Fast! Achte auf das Runden.";
+  S.msgs = [`<div class="msg bad">${pick(BAD)}${extra}</div>`];
+  renderTask();
+  const card = $("#taskcard"); card.classList.remove("pop"); void card.offsetWidth; card.classList.add("shake");
+  const i = $("#ans"); if (i) { i.value = input.value; i.select(); }
+}
+
+function hint() {
+  const t = S.tasks[S.idx], st = t.steps[S.step];
+  S.hinted = true;
+  if (t.isText && t.svg) t.figShown = true;
+  const extra = t.isText && t.svg ? " Ich habe dir eine Skizze gezeichnet. Mit den Hufen." : "";
+  S.msgs = [`<div class="msg hint"><span class="who">Lorenzo:</span> ${st.hint}${extra}</div>`];
+  const keep = $("#ans") ? $("#ans").value : "";
+  renderTask();
+  const i = $("#ans"); if (i) i.value = keep;
+}
+
+function reveal() {
+  const t = S.tasks[S.idx], st = t.steps[S.step];
+  st.done = true; st.revealed = true;
+  if (t.isText && t.svg) t.figShown = true;
+  S.log.push({ station: S.idx + 1, letter: t.letter, q: st.q, coins: 0 });
+  S.step++; S.tries = 0; S.hinted = false; S.msgs = [];
+  renderTask();
+}
+
+function next() {
+  S.idx++; S.step = 0; S.msgs = [];
+  if (S.idx >= S.tasks.length) renderEnd(); else { renderTask(true); window.scrollTo({ top: 0, behavior: "smooth" }); }
+}
+
+function renderEnd() {
+  const pct = S.coins / S.max;
+  const rank = pct >= 0.8 ? "Legende des Dschungels" : pct >= 0.5 ? "Tempel-Profi" : "Praktikum bestanden";
+  const text = pct >= 0.8 ? "Die Urbewohner hätten dich zum Hohepriester der Mathematik ernannt. Kevin will ein Autogramm."
+    : pct >= 0.5 ? "Ein starker Fund! Mit ein paar Münzen mehr wird dein Name in Stein gemeißelt."
+    : "Du hast den Schatz erreicht. Lorenzo meint: Beim nächsten Mal öfter den Formel-Rucksack öffnen.";
+  const key = "spitz-best-" + S.grade, best = store.get(key);
+  if (best == null || S.coins > best) store.set(key, S.coins);
+  const rows = S.log.map(l => `<tr><td>${l.station}</td><td>${l.letter}</td><td>${l.q}</td><td style="text-align:right">${l.coins}</td></tr>`).join("");
+  app.innerHTML = `
+    <section class="card" style="gap:8px"><div class="trail" aria-label="Expedition abgeschlossen">${trailHTML()}</div></section>
+    <section class="card finale pop">
+      <svg width="120" height="96" viewBox="0 0 120 96" aria-hidden="true">
+        <path d="M10 88 L60 10 L110 88 Z" fill="var(--gold-soft)" stroke="var(--gold)" stroke-width="3" stroke-linejoin="round"/>
+        <path d="M26 64 H94 M38 44 H82 M48 28 H72" stroke="var(--gold)" stroke-width="2" stroke-dasharray="5 4"/>
+        <circle cx="60" cy="58" r="9" fill="var(--gold)"/><path d="M56 58 L60 51 L64 58 L60 65 Z" fill="var(--gold-soft)"/>
+      </svg>
+      <h2>Schatz gefunden!</h2>
+      <div class="big-coins">${S.coins} <span style="font-size:20px;font-weight:400;color:var(--muted)">von ${S.max} Münzen</span></div>
+      <div class="rank">${rank}</div>
+      <p style="max-width:52ch">${text}</p>
+      <div class="next-row" style="justify-content:center">
+        <button class="btn gold" type="button" id="b-again">Neue Expedition, gleicher Grad</button>
+        <button class="btn ghost" type="button" id="b-home">Anderen Grad wählen</button>
+      </div>
+      <div class="summary"><table><thead><tr><th>Station</th><th>Typ</th><th>Aufgabe</th><th style="text-align:right">Münzen</th></tr></thead><tbody>${rows}</tbody></table></div>
+    </section>`;
+  $("#b-again").addEventListener("click", () => start(S.grade));
+  $("#b-home").addEventListener("click", renderStart);
+}
+
+renderStart();
+})();
+</script>
+
+</body></html>
